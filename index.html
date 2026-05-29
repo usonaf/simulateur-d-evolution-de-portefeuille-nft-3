@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur d&#x27;Évolution de Portefeuille NFT</title>
+    <meta name="description" content="Anticipez l">
+    <style>
+        :root {
+            --dark-bg: #1A1A1A;
+            --dark-card: #282828;
+            --text-light: #E0E0E0;
+            --text-medium: #B0B0B0;
+            --accent-green: #00FFC0;
+            --accent-blue: #00BFFF;
+            --border-color: #444;
+            --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-sans);
+            color: var(--text-light);
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            background: linear-gradient(180deg, var(--dark-bg) 0%, #101010 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.03em;
+            background: linear-gradient(90deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.3em;
+            color: var(--text-medium);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .tool-section {
+            background-color: var(--dark-card);
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+        }
+
+        .tool-section h2 {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--accent-green);
+        }
+
+        form {
+            display: grid;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.95em;
+            color: var(--text-medium);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="number"],
+        select {
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #333;
+            color: var(--text-light);
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(0, 255, 192, 0.2);
+        }
+
+        select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23E0E0E0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        button {
+            background-color: var(--accent-blue);
+            color: var(--dark-bg);
+            padding: 16px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            background-color: #222;
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            min-height: 150px;
+        }
+
+        .result-section h3 {
+            font-size: 1.6em;
+            color: var(--accent-green);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        #tool-result {
+            font-family: var(--font-mono);
+            font-size: 1em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.8;
+            color: var(--text-medium);
+        }
+
+        .result-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .result-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-group h4 {
+            color: var(--accent-blue);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-group ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .result-group li {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .result-group li::before {
+            content: '•';
+            color: var(--accent-green);
+            position: absolute;
+            left: 0;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .card {
+            background-color: var(--dark-card);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h3 {
+            font-size: 1.5em;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--text-medium);
+            font-size: 1em;
+        }
+
+        .seo-section {
+            background-color: #121212;
+            padding: 60px 20px;
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .seo-section h2 {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 30px;
+        }
+
+        .seo-section p {
+            color: var(--text-medium);
+            max-width: 900px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+            font-size: 0.95em;
+            text-align: left;
+        }
+
+        .seo-section a {
+            color: var(--accent-green);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .seo-section a:hover {
+            color: var(--accent-blue);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-medium);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1.1em;
+            }
+            .tool-section {
+                padding: 30px;
+            }
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simulateur-d-evolution-de-portefeuille-nft-3.onrender.com">
+    <meta property="og:title" content="Simulateur d&#x27;Évolution de Portefeuille NFT">
+    <meta property="og:description" content="Anticipez l">
+    <meta property="og:url" content="https://simulateur-d-evolution-de-portefeuille-nft-3.onrender.com">
+    <meta property="og:type" content="website">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Simulateur d'Évolution de Portefeuille NFT", "description": "Anticipez l", "url": "https://simulateur-d-evolution-de-portefeuille-nft-3.onrender.com", "applicationCategory": "UtilityApplication", "operatingSystem": "Web Browser"}</script>
+</head>
+<body data-site-slug="simulateur-d-evolution-de-portefeuille-nft-3" data-runtime-mode="generic_calculator" data-site-slug="simulateur-d-evolution-de-portefeuille-nft-3" data-runtime-mode="imported_static">
+    <header>
+        <div class="container">
+            <h1>Simulateur d'Évolution de Portefeuille NFT</h1>
+            <p>Anticipez l'avenir de vos actifs numériques. Visualisez et projetez la valeur de vos NFTs avec des données précises, en tenant compte des tendances du marché, de la rareté et des métriques de vente historiques.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="tool-section">
+            <h2>Projetez la Valeur de Votre Collection NFT</h2>
+            <form id="tool-form">
+                <div class="form-group">
+                    <label for="initialValue">Valeur d'achat initiale (€)</label>
+                    <input type="number" id="initialValue" name="initialValue" value="1000" min="0" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="growthRate">Taux de croissance annuel (%)</label>
+                    <input type="number" id="growthRate" name="growthRate" value="15" min="-50" max="200" step="0.5" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeHorizon">Horizon de temps (années)</label>
+                    <input type="number" id="timeHorizon" name="timeHorizon" value="3" min="1" max="10" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="rarityFactor">Facteur de rareté de votre NFT (1 = moyen, 2 = rare, 3 = très rare)</label>
+                    <select id="rarityFactor" name="rarityFactor">
+                        <option value="1">1 - Commun</option>
+                        <option value="1.5">1.5 - Peu commun</option>
+                        <option value="2">2 - Rare</option>
+                        <option value="2.5">2.5 - Très rare</option>
+                        <option value="3">3 - Légendaire</option>
+                    </select>
+                </div>
+                <button type="submit" id="tool-submit" data-affiliate-slot="nft-simulator-cta">Simuler l'Évolution</button>
+            </form>
+
+            <div class="result-section">
+                <h3>Résultats de la Simulation</h3>
+                <pre id="tool-result">Entrez vos paramètres ci-dessus pour projeter la valeur future de votre portefeuille NFT.</pre>
+            </div>
+        </section>
+
+        <section class="info-cards">
+            <div class="card">
+                <h3>Analyse Approfondie</h3>
+                <p>Notre simulateur prend en compte des variables clés du marché pour vous offrir une projection réaliste. Comprenez l'impact de la rareté et des tendances sur vos actifs.</p>
+            </div>
+            <div class="card">
+                <h3>Visualisation Claire</h3>
+                <p>Obtenez une estimation de la valeur future de votre collection année par année. Des données structurées pour une prise de décision éclairée.</p>
+            </div>
+            <div class="card">
+                <h3>Optimisation Stratégique</h3>
+                <p>Idéal pour les collectionneurs et investisseurs souhaitant optimiser leurs stratégies d'acquisition et de vente dans l'écosystème NFT.</p>
+            </div>
+        </section>
+    <section class="growth-anchor-block" data-growth-affiliate="anchor" style="margin:20px 0 0;padding:14px 16px;border:1px solid rgba(127,127,127,.18);border-radius:16px;background:rgba(127,127,127,.06)"><p class="growth-anchor-copy" style="margin:0;line-height:1.7">Dans le prolongement de Simulateur d'Évolution de Portefeuille NFT, tu peux également regarder <a href="https://aerobet-fr.casino/">Aerobet Bonus</a> pour situer cette option dans un cadre plus large.</p></section></main>
+
+    <section class="seo-section">
+        <div class="container">
+            <h2>Comprendre l'Investissement NFT en France</h2>
+            <p>Le marché des Non-Fungible Tokens (NFTs) connaît une croissance exponentielle, attirant un nombre croissant d'investisseurs et de collectionneurs en France. Que vous soyez un passionné d'art numérique, un gamer cherchant des actifs in-game, ou un investisseur à la recherche de nouvelles opportunités, comprendre la dynamique de ce marché est crucial.</p>
+            <p>Notre simulateur d'évolution de portefeuille NFT est conçu pour vous aider à <a href="#tool-form">estimer la valeur future de vos NFTs</a>. En intégrant des facteurs comme la valeur d'achat, le taux de croissance annuel projeté, l'horizon temporel et le facteur de rareté, il offre une perspective précieuse sur le potentiel de vos actifs numériques.</p>
+            <p>Pour les collectionneurs français, naviguer dans l'univers des NFTs peut être complexe. Des plateformes comme OpenSea, Rarible ou LooksRare sont devenues des lieux d'échange privilégiés. Des artistes émergents aux collections établies comme CryptoPunks ou Bored Ape Yacht Club, chaque actif a ses spécificités. Utiliser un <a href="#tool-form">outil de projection NFT</a> comme le nôtre permet d'anticiper les rendements potentiels et de mieux planifier vos investissements.</p>
+            <p>Que vous cherchiez à évaluer la performance de vos "art blocks", de vos "game assets" ou de tout autre type de jeton non fongible, une analyse basée sur des données est essentielle. Notre objectif est de vous fournir les outils nécessaires pour prendre des décisions éclairées et sécuriser votre <a href="#tool-form">investissement dans les NFTs</a> sur le long terme.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            © 2023 Signal Noir. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('tool-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const initialValue = parseFloat(document.getElementById('initialValue').value);
+            const growthRate = parseFloat(document.getElementById('growthRate').value) / 100;
+            const timeHorizon = parseInt(document.getElementById('timeHorizon').value);
+            const rarityFactor = parseFloat(document.getElementById('rarityFactor').value);
+
+            let resultHTML = '';
+            let currentValue = initialValue;
+
+            resultHTML += '<div class="result-group">';
+            resultHTML += `<h4>Projection Annuelle Détaillée</h4>`;
+            resultHTML += `<ul>`;
+            resultHTML += `<li><strong>Année 0 (Actuelle) :</strong> ${initialValue.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</li>`;
+
+            for (let i = 1; i <= timeHorizon; i++) {
+                currentValue = currentValue * (1 + growthRate);
+                // Apply rarity factor impact, diminishing over time as market matures for "rarity"
+                // Simple model: rarity factor applies less in later years
+                const effectiveRarityFactor = 1 + ((rarityFactor - 1) * Math.pow(0.8, i - 1)); // Diminishing effect
+                currentValue = currentValue * effectiveRarityFactor;
+                resultHTML += `<li><strong>Année ${i} :</strong> ${currentValue.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</li>`;
+            }
+            resultHTML += `</ul>`;
+            resultHTML += '</div>';
+
+            resultHTML += '<div class="result-group">';
+            resultHTML += `<h4>Synthèse de la Projection</h4>`;
+            resultHTML += `<ul>`;
+            resultHTML += `<li><strong>Valeur Initiale :</strong> ${initialValue.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</li>`;
+            resultHTML += `<li><strong>Valeur Projetée après ${timeHorizon} ans :</strong> ${currentValue.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</li>`;
+            const totalGrowth = currentValue - initialValue;
+            const percentageGrowth = (totalGrowth / initialValue) * 100;
+            resultHTML += `<li><strong>Croissance Totale :</strong> ${totalGrowth.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} (${percentageGrowth.toFixed(2)}%)</li>`;
+            resultHTML += `</ul>`;
+            resultHTML += '</div>';
+
+            document.getElementById('tool-result').innerHTML = resultHTML;
+        });
+    </script>
+<div id="qa-smoke-result" hidden></div>
+<script id="farmbuilder-affiliate-helper">
+(function () {
+  window.__UTILITY_AFFILIATE_MAP = window.__UTILITY_AFFILIATE_MAP || {};
+  document.addEventListener("click", function (event) {
+    const target = event.target.closest("[data-affiliate-slot]");
+    if (!target) return;
+    const slot = target.getAttribute("data-affiliate-slot");
+    const href = window.__UTILITY_AFFILIATE_MAP[slot];
+    if (!href) return;
+    if (target.tagName && target.tagName.toLowerCase() === "a") {
+      target.setAttribute("href", href);
+      target.removeAttribute("rel");
+      return;
+    }
+    event.preventDefault();
+    window.open(href, "_blank");
+  }, true);
+})();
+</script>
+<script id="farmbuilder-functional-qa">
+(function () {
+  function marker() {
+    let node = document.getElementById("qa-smoke-result");
+    if (node) return node;
+    node = document.createElement("div");
+    node.id = "qa-smoke-result";
+    node.hidden = true;
+    document.body.appendChild(node);
+    return node;
+  }
+
+  let qaFinished = false;
+  let qaWatchdog = null;
+
+  function normalize(text) {
+    return String(text || "").replace(/\s+/g, " ").trim();
+  }
+
+  function findForm() {
+    return document.getElementById("tool-form") || document.querySelector("form");
+  }
+
+  function findResult() {
+    return (
+      document.getElementById("tool-result") ||
+      document.querySelector("[data-result]") ||
+      document.querySelector(".tool-result, .result-card, .result, .results, .output, .preview, .diagnostic, .analysis")
+    );
+  }
+
+  function primaryAction(form) {
+    if (!form) return null;
+    return (
+      document.getElementById("tool-submit") ||
+      form.querySelector("#tool-submit") ||
+      form.querySelector("[data-primary-action]") ||
+      form.querySelector("button[type=submit]") ||
+      form.querySelector("button") ||
+      form.querySelector("input[type=submit]")
+    );
+  }
+
+  function resultSignature(node) {
+    if (!node) return "";
+    const text = normalize(node.textContent);
+    const html = normalize(node.innerHTML).slice(0, 600);
+    return `${text}||${html}`;
+  }
+
+  function resultHeadline(node) {
+    if (!node) return "";
+    const heading = node.querySelector("h1, h2, h3, strong, b");
+    return normalize(heading ? heading.textContent : "");
+  }
+
+  function sampleText(field) {
+    const key = `${field.id || ""} ${field.name || ""} ${field.placeholder || ""}`.toLowerCase();
+    if (/email/.test(key)) return "bonjour@example.com";
+    if (/url|site|website|lien/.test(key)) return "https://example.com/offre-solaire";
+    if (/phone|tel|mobile/.test(key)) return "0612345678";
+    if (/ville|city|localisation|location|region|departement|postal/.test(key)) return "Paris";
+    if (/orientation/.test(key)) return "sud";
+    if (/keyword|theme|topic|sujet|subject/.test(key)) return "energie solaire domestique";
+    if (/titre|title/.test(key)) return "Simulateur solaire maison";
+    if (/nom|name|project/.test(key)) return "Projet Horizon";
+    if (/description|notes|content|message/.test(key)) return "Maison individuelle exposee sud avec toiture exploitable.";
+    return field.placeholder || "France";
+  }
+
+  function sampleNumber(field) {
+    const key = `${field.id || ""} ${field.name || ""}`.toLowerCase();
+    if (/inclinaison|angle|slope/.test(key)) return "30";
+    if (/surface|size|m2|sqm/.test(key)) return "28";
+    if (/annee|year/.test(key)) return "2024";
+    if (/prix|price|budget|cost|amount|montant/.test(key)) return "12000";
+    const min = Number(field.min || "");
+    const max = Number(field.max || "");
+    if (Number.isFinite(min) && Number.isFinite(max) && max >= min) {
+      return String(Math.min(max, Math.max(min, min + Math.round((max - min) * 0.35))));
+    }
+    if (Number.isFinite(min)) return String(Math.max(min, 12));
+    if (Number.isFinite(max)) return String(Math.min(max, 12));
+    return field.value || "12";
+  }
+
+  function applySample(field) {
+    const tag = (field.tagName || "").toLowerCase();
+    const type = (field.type || "").toLowerCase();
+    if (field.disabled) return;
+    if (type === "hidden" || type === "submit" || type === "button" || type === "reset" || type === "image" || type === "file") {
+      return;
+    }
+    const currentValue = normalize(field.value);
+    if (tag === "select") {
+      if (currentValue) return;
+      const option = Array.from(field.options || []).find((item) => item.value && !item.disabled) || field.options[0];
+      if (option) field.value = option.value;
+      return;
+    }
+    if (type === "checkbox") {
+      if (field.checked) return;
+      field.checked = true;
+      return;
+    }
+    if (type === "radio") {
+      if (field.checked) return;
+      field.checked = true;
+      return;
+    }
+    if (type === "date") {
+      if (currentValue) return;
+      field.value = "2026-03-01";
+      return;
+    }
+    if (type === "email") {
+      if (currentValue) return;
+      field.value = "bonjour@example.com";
+      return;
+    }
+    if (type === "url") {
+      if (currentValue) return;
+      field.value = "https://example.com/offre-solaire";
+      return;
+    }
+    if (type === "tel") {
+      if (currentValue) return;
+      field.value = "0612345678";
+      return;
+    }
+    if (type === "color") {
+      if (currentValue) return;
+      field.value = "#2f855a";
+      return;
+    }
+    if (type === "number" || type === "range") {
+      if (currentValue) return;
+      field.value = sampleNumber(field);
+      return;
+    }
+    if (currentValue) return;
+    field.value = sampleText(field);
+  }
+
+  function stamp(status, detail, headline, primary) {
+    if (qaFinished) return;
+    qaFinished = true;
+    if (qaWatchdog) {
+      window.clearTimeout(qaWatchdog);
+      qaWatchdog = null;
+    }
+    const node = marker();
+    node.dataset.status = status;
+    node.dataset.mode = "native-form";
+    node.dataset.detail = detail || "";
+    node.dataset.headline = headline || "";
+    node.dataset.primary = primary || "";
+    node.dataset.viewport = window.innerWidth <= 640 ? "mobile" : "desktop";
+    window.setTimeout(function () {
+      try {
+        window.stop();
+      } catch (_error) {}
+    }, 0);
+  }
+
+  function installModalGuards() {
+    const noop = function () {};
+    const approve = function () { return true; };
+    const empty = function () { return ""; };
+    try { window.alert = noop; } catch (_error) {}
+    try { window.confirm = approve; } catch (_error) {}
+    try { window.prompt = empty; } catch (_error) {}
+  }
+
+  function triggerAction(form, action) {
+    try {
+      if (typeof form.requestSubmit === "function") {
+        form.requestSubmit(action || undefined);
+        return;
+      }
+    } catch (_error) {}
+    if (action && typeof action.click === "function") {
+      action.click();
+      return;
+    }
+    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+  }
+
+  function inspectResult(before, attemptsLeft) {
+    const result = findResult();
+    if (!result) {
+      stamp("fail", "La zone de resultat est introuvable.", "");
+      return;
+    }
+    const after = resultSignature(result);
+    const text = normalize(result.textContent);
+    if (after && after !== before && text.length >= 24) {
+      const primary = result.querySelector("a[href], button[data-href], [data-primary-url]") || document.querySelector("#tool-result a[href]");
+      stamp("pass", "Le formulaire natif a mis a jour la zone de resultat.", resultHeadline(result), primary ? (primary.getAttribute("href") || primary.getAttribute("data-primary-url") || "") : "");
+      return;
+    }
+    if (attemptsLeft > 0) {
+      window.setTimeout(function () {
+        inspectResult(before, attemptsLeft - 1);
+      }, 250);
+      return;
+    }
+    stamp("fail", "La zone de resultat n'a pas renvoye de contenu exploitable.", resultHeadline(result));
+  }
+
+  function runSmoke() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("__qa") !== "functional") return;
+    qaWatchdog = window.setTimeout(function () {
+      stamp("fail", "QA smoke timed out before the page reported a usable result.", "");
+    }, 7000);
+    const form = findForm();
+    if (!form) {
+      stamp("fail", "Le formulaire principal est introuvable.", "");
+      return;
+    }
+    const result = findResult();
+    const before = resultSignature(result);
+    installModalGuards();
+    try {
+      form.querySelectorAll("input, select, textarea").forEach(applySample);
+    } catch (error) {
+      stamp("fail", error && error.message ? `QA smoke sample failed: ${error.message}` : "QA smoke sample failed before submit.", "");
+      return;
+    }
+    const action = primaryAction(form);
+    try {
+      triggerAction(form, action);
+    } catch (error) {
+      stamp("fail", error && error.message ? `QA smoke submit failed: ${error.message}` : "QA smoke submit failed.", "");
+      return;
+    }
+    inspectResult(before, 10);
+  }
+
+  window.addEventListener("error", function (event) {
+    const message = event && event.message ? event.message : "JavaScript runtime error during QA smoke.";
+    stamp("fail", `QA smoke JS error: ${message}`, "");
+  }, { once: true });
+
+  window.addEventListener("unhandledrejection", function (event) {
+    const reason = event && event.reason;
+    const detail = typeof reason === "string"
+      ? reason
+      : reason && reason.message
+        ? reason.message
+        : "Unhandled promise rejection during QA smoke.";
+    stamp("fail", `QA smoke rejection: ${detail}`, "");
+  }, { once: true });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      window.setTimeout(runSmoke, 60);
+    }, { once: true });
+  } else {
+    window.setTimeout(runSmoke, 60);
+  }
+})();
+</script>
+<script id="farmbuilder-affiliate-runtime">
+(function () {
+  document.addEventListener("click", function (event) {
+    const node = event.target.closest("[data-affiliate-link]");
+    if (!node) return;
+    const url = node.getAttribute("data-affiliate-link");
+    if (!url) return;
+    window.setTimeout(function () {
+      try {
+        window.open(url, "_blank");
+      } catch (error) {
+        window.location.href = url;
+      }
+    }, 80);
+  }, true);
+})();
+</script>
+</body>
+</html>
