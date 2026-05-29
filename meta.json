@@ -11,14 +11,14 @@
   "country": "FR",
   "url": null,
   "expected_url": "https://simulateur-d-evolution-de-portefeuille-nft-3.onrender.com",
-  "created": "2026-05-29T01:53:29.354842+00:00",
+  "created": "2026-05-29T02:03:19.981955+00:00",
   "owner_user_id": "user-1774822953462",
   "owner_username": "admin",
   "owner_display_name": "Administrator",
   "provider_space_id": "provider-space",
   "provider_space_name": "Provider space",
   "status": "generated",
-  "run_id": "run-1780019567202",
+  "run_id": "run-1780020198981",
   "publish_target": "render",
   "mode": "production",
   "source_type": "imported",
@@ -96,161 +96,8 @@
       "url_source": "alias"
     },
     "qa": {
-      "status": "pass",
-      "local": {
-        "status": "pass",
-        "checks": [
-          {
-            "name": "index_exists",
-            "status": "pass",
-            "detail": "index.html exists"
-          },
-          {
-            "name": "meta_exists",
-            "status": "pass",
-            "detail": "meta.json exists"
-          },
-          {
-            "name": "robots_exists",
-            "status": "pass",
-            "detail": "robots.txt exists"
-          },
-          {
-            "name": "has_title",
-            "status": "pass",
-            "detail": "HTML contains a title tag"
-          },
-          {
-            "name": "has_viewport",
-            "status": "pass",
-            "detail": "HTML contains a mobile viewport meta tag"
-          },
-          {
-            "name": "has_canonical",
-            "status": "pass",
-            "detail": "HTML contains a canonical URL"
-          },
-          {
-            "name": "bundle_size",
-            "status": "pass",
-            "detail": "Generated HTML stays below 250KB"
-          },
-          {
-            "name": "functional_qa_hook",
-            "status": "pass",
-            "detail": "Generated HTML includes the browser QA hook used before deploy."
-          },
-          {
-            "name": "inline_script_syntax",
-            "status": "pass",
-            "detail": "Inline JavaScript syntax check passed."
-          },
-          {
-            "name": "robots_google_only",
-            "status": "pass",
-            "detail": "robots.txt allows only Google crawlers and blocks all other bots."
-          },
-          {
-            "name": "no_meta_noindex",
-            "status": "pass",
-            "detail": "Generated HTML does not inject a noindex robots meta tag."
-          },
-          {
-            "name": "no_internal_branding",
-            "status": "pass",
-            "detail": "Generated site does not leak internal platform branding or internal product naming."
-          },
-          {
-            "name": "desktop_layout_overlap",
-            "status": "pass",
-            "detail": "Editorial desktop layout avoids negative overlap offsets on the tool panel"
-          }
-        ],
-        "checked_at": 1780019548
-      },
-      "functional": {
-        "status": "pass",
-        "detail": "desktop: Le formulaire natif a mis a jour la zone de resultat. | mobile: Le formulaire natif a mis a jour la zone de resultat.",
-        "target_url": "http://127.0.0.1:38879/index.html?__qa=functional",
-        "mode": "native-form",
-        "headline": "Année 0 (Actuelle) :",
-        "primary_url": "",
-        "desktop": {
-          "status": "pass",
-          "detail": "Le formulaire natif a mis a jour la zone de resultat.",
-          "target_url": "http://127.0.0.1:38879/index.html?__qa=functional",
-          "viewport": "desktop",
-          "mode": "native-form",
-          "headline": "Année 0 (Actuelle) :",
-          "primary_url": "",
-          "reported_viewport": "desktop",
-          "attempt": 1,
-          "updated_at": 1780019549
-        },
-        "mobile": {
-          "status": "pass",
-          "detail": "Le formulaire natif a mis a jour la zone de resultat.",
-          "target_url": "http://127.0.0.1:38879/index.html?__qa=functional",
-          "viewport": "mobile",
-          "mode": "native-form",
-          "headline": "Année 0 (Actuelle) :",
-          "primary_url": "",
-          "reported_viewport": "mobile",
-          "attempt": 1,
-          "updated_at": 1780019550
-        },
-        "updated_at": 1780019550
-      },
-      "remote": {
-        "status": "pass",
-        "checks": [
-          {
-            "name": "remote_200",
-            "status": "pass",
-            "detail": "Remote deployment returned HTTP 200"
-          },
-          {
-            "name": "remote_title",
-            "status": "pass",
-            "detail": "Remote HTML contains a title tag"
-          },
-          {
-            "name": "remote_body",
-            "status": "pass",
-            "detail": "Remote HTML contains a body tag"
-          }
-        ],
-        "checked_at": 1780019550
-      },
-      "visual": {
-        "status": "pass",
-        "desktop": {
-          "status": "pass",
-          "path": "/var/lib/utility-site-studio/static/generated-qa/simulateur-d-evolution-de-portefeuille-nft-3/simulateur-d-evolution-de-portefeuille-nft-3-desktop.png",
-          "detail": "1440x960 screenshot captured.",
-          "relative_url": "/static/generated-qa/simulateur-d-evolution-de-portefeuille-nft-3/simulateur-d-evolution-de-portefeuille-nft-3-desktop.png"
-        },
-        "mobile": {
-          "status": "pass",
-          "path": "/var/lib/utility-site-studio/static/generated-qa/simulateur-d-evolution-de-portefeuille-nft-3/simulateur-d-evolution-de-portefeuille-nft-3-mobile.png",
-          "detail": "430x932 screenshot captured.",
-          "relative_url": "/static/generated-qa/simulateur-d-evolution-de-portefeuille-nft-3/simulateur-d-evolution-de-portefeuille-nft-3-mobile.png"
-        },
-        "updated_at": 1780019553
-      },
-      "lighthouse": {
-        "status": "pass",
-        "scores": {
-          "performance": 100,
-          "accessibility": 93,
-          "best-practices": 96,
-          "seo": 100
-        },
-        "report_path": "/var/lib/utility-site-studio/data/qa/lighthouse/simulateur-d-evolution-de-portefeuille-nft-3-lighthouse.json",
-        "updated_at": 1780019566
-      },
-      "qa_live_url": "https://simulateur-d-evolution-de-portefeuille.onrender.com",
-      "updated_at": "2026-05-29T01:52:46.935505+00:00"
+      "status": "failed",
+      "detail": "POST https://api.render.com/v1/services failed with 400: Hobby Tier is limited to 25 services"
     }
   }
 }
